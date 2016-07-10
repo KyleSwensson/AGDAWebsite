@@ -20,21 +20,21 @@ var mainUrl = "mainGame.html";
 function attemptEnteringDoor(touchedDoor) {
 	var player = $("#player");
 
-	if (playerIntersectingDoor(touchedDoor)) {
+	if (playerIntersectingDoor($(touchedDoor))) {
 	//TODO: cookies not owrking
 		  //save the position of the player when leave the page, so when he returns through the door he will be in front of the door and not at starting point
 		   document.cookie = "playerPosition=" + player.position().left;
 
 		   //Determines the type of door, uses to decide where to move player to
-		   if ($(this).attr('id') == "barDoor") { 
+		   if ($(touchedDoor).attr('id') == "barDoor") { 
 		   	location = barUrl;
-		   } else if ($(this).attr('id') == "helpDoor") {
+		   } else if ($(touchedDoor).attr('id') == "helpDoor") {
 			location = helpUrl;
-		   }  else if ($(this).attr('id') == "mailDoor") {
+		   }  else if ($(touchedDoor).attr('id') == "mailDoor") {
 			location = mailUrl;
-		   }  else if ($(this).attr('id') == "artDoor") {
+		   }  else if ($(touchedDoor).attr('id') == "artDoor") {
 			location = artUrl;
-		   } else if ($(this).attr('id') == "exitDoor") {
+		   } else if ($(touchedDoor).attr('id') == "exitDoor") {
 			location = mainUrl;
 		   }
 	}
@@ -70,8 +70,16 @@ $(document).ready(function() {
 		rightButtonClicked = false;
 	});
 	
+	//attempt to enter a door if a door is tapped
 	$(".door").on('touchstart', function() {
 		attemptEnteringDoor(this);
+	});
+
+	//attempt to enter all doors (see if player is in front of any of them) if player is tapped
+	$("#player").on('touchstart', function() {
+		$(".door").each(function(index) {
+			attemptEnteringDoor(this);
+		});
 	});
 
 });
@@ -177,25 +185,7 @@ $(document).keydown(function(e) {
 	 if (e.which == 13) {
 	    console.log("pressed enter");
 	   $(".door").each(function(index) {
-		   if (playerIntersectingDoor($(this))) {
-
-			   //TODO: cookies not owrking
-			   //save the position of the player when leave the page, so when he returns through the door he will be in front of the door and not at starting point
-			   document.cookie = "playerPosition=" + player.position().left;
-
-			   //Determines the type of door, uses to decide where to move player to
-			   if ($(this).attr('id') == "barDoor") { 
-			   	location = barUrl;
-			   } else if ($(this).attr('id') == "helpDoor") {
-				location = helpUrl;
-			   }  else if ($(this).attr('id') == "mailDoor") {
-				location = mailUrl;
-			   }  else if ($(this).attr('id') == "artDoor") {
-				location = artUrl;
-			   } else if ($(this).attr('id') == "exitDoor") {
-				location = mainUrl;
-			   }
-		    }
+		attemptEnteringDoor(this);	
 	   });
 	  
         } else if (e.which == 32) {
