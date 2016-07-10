@@ -1,0 +1,17 @@
+#ground {
+	width: 100%;
+	background-color: #bbccff;
+}
+
+#player {
+	left: 20%;
+	top: 60%;
+}
+
+#exitDoor {
+	position: absolute;
+	left: 10%;
+	height: 20%;
+	width: 6%;
+	top: 50%;
+}

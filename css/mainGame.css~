@@ -1,0 +1,88 @@
+
+#ground {
+	width: 200%;
+	background-color: #888888;
+}
+
+#player {
+	left: 48%;
+	top: 60%;
+}
+
+#barBuilding {
+	background-image: url(barImg.png);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	position: absolute;
+	
+	left:60%;
+	height: 20%;
+	top: 50%;
+	width: 10%;
+	//temp bgcolor	
+	background-color: #134619;
+}
+
+#helpBuilding {
+	position: absolute;
+	left: 90%;
+	height: 15%;
+	top: 55%;
+	width: 15%;
+	background-color: #33aa33;
+}
+#welcomeBooth {
+	position: absolute;
+	left: 40%;
+	top: 55%;
+	height: 15%;
+	width: 10%;
+	background-color: #1199aa;
+}
+#mailBuilding {
+	position: absolute;
+	left: 130%;
+	top:45%;
+	height: 25%;
+	width: 20%;
+	background-color: #9911aa;
+}
+#artBuilding {
+	position: absolute;
+	left: 160%;
+	top: 50%;
+	height: 20%;
+	width: 20%;
+	background-color: #558899;
+}
+
+#barDoor {
+	position: relative;
+	left: 40%;
+	height: 50%;
+	top: 50%;
+	width: 20%;
+}
+
+#helpDoor {
+	position: relative;
+	left: 40%;
+	height: 50%;
+	top: 50%;
+	width: 20%;
+}
+#mailDoor {
+	position: relative;
+	left: 40%;
+	height: 50%;
+	top: 50%;
+	width: 20%;
+}
+#artDoor {
+	position: relative;
+	left: 40%;
+	height: 50%;
+	top: 50%;
+	width: 20%;
+}
+

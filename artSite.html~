@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AGDA: The Game </title>
+	<link rel="stylesheet" href="css/gameBase.css">
+	<link rel="stylesheet" href="css/artSite.css">
+</head>
+
+<div id="gameHolder">
+	
+	<div id="ground" class="nonPlayer">
+	</div>
+
+	<div id="exitDoor" class="door">
+	</div>
+
+	<div id="player">
+	</div>
+
+</div>
+
+<div id="foot">
+	<script src="js/jquery-1.12.3.js"></script>
+	<script src="js/gameBase.js"></script>
+</div>
+</html>
+
