@@ -43,3 +43,29 @@ html {
 	height: 10%;
 	background-color: #3366aa;
 }
+
+#header {
+	width: 100%;
+	height: 5%;
+	background-color: #223344;
+	left: 0;
+	top: 0;
+	position: absolute;
+
+}
+
+#header ul {
+	text-align: center;
+}
+
+#header ul li {
+	display: inline-block;
+	color: #ffffff;	
+	padding-left: 7%;
+	padding-right: 7%;
+}
+
+
+a {
+	color: #ffffff;
+}
