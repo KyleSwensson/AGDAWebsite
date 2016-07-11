@@ -52,7 +52,6 @@ $(document).ready(function() {
 			left: getCookie("playerPosition")
 		});
 	}
-
 	//set update function to run every 50 ms
 	setInterval(updateFunc, 50);
 
@@ -188,15 +187,15 @@ $(document).keydown(function(e) {
 		attemptEnteringDoor(this);	
 	   });
 	  
-        } else if (e.which == 32) {
-	    //if pressing space and canJump jump and set canjump to false
+        } else if (e.which == 32 || e.which == 38) {
+	    //if pressing space or up arrow and canJump jump and set canjump to false
 	   if (canJump) {
 	   	playerYVelocity = -10;
 		canJump = false;
 	   }
     }
 });
-//sets variables for keys to false
+//sets variables for keys to false if they are released
 $(document).keyup(function(e) {
 	if (e.which == 39) {
 		rightArrPressed = false;
