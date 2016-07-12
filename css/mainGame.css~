@@ -9,15 +9,6 @@
 	top: 60%;
 }
 
-#arrowKeyInstructions {
-	position: absolute;
-	width: 8%;
-	height: 6%;
-	background-image: url(arrowGuide.png);
-	background-repeat: no-repeat;
-	background-size: 100% 100%;
-}
-
 #AGDALogo {
 	position: absolute;
 	background-image: url(AGDALogo.png);
