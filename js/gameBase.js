@@ -10,6 +10,14 @@ var leftButtonClicked = false;
 //var that is true if player is on ground and false if player is not on the ground essentially
 var canJump = false;
 
+
+//var that tells whether player needs arrow key instructions displayed
+var needArrInstr = true;
+//var that tells whether player needs enter instruction displayed when in front of door
+var needEnterInstr = true;
+//var that tells whether the enter instructions are currently visible or not
+var enterInstructionsVisible = false;
+
 //urls for all the different pages that can be entered through doors
 var barUrl = "barSite.html";
 var helpUrl = "helpSite.html";
@@ -32,14 +40,42 @@ function addArrowInstructions() {
 	}, 1000);
 }	
 
+function addEnterInstructions() {
+	var player = $("#player");
+	var instructions = '<div id="enterInstructions"></div>';
+	$("#gameHolder").append(instructions);
+	$("#enterInstructions").css({
+		opacity: "0",
+		left: player.position().left - ($("#enterInstructions").width()/2) + (player.width() / 2),
+		top: "0",
+	});
+	$("#enterInstructions").animate({
+		top: player.position().top  - $("#enterInstructions").height() ,
+		opacity: "1"
+	}, 1000);
+}	
+
+
+
 function removeArrowInstructions() {
 
 	$("#arrowKeyInstructions").animate({
 		top: "-=200",
 		opacity: "0"
 	}, 1000, function() {
-		//delete arrow instructions here
 		$("#arrowKeyInstructions").remove();
+	});
+}
+
+
+
+function removeEnterInstructions() {
+
+	$("#enterInstructions").animate({
+		top: "-=200",
+		opacity: "0"
+	}, 1000, function() {
+		$("#enterInstructions").remove();
 	});
 }
 
@@ -63,7 +99,10 @@ function attemptEnteringDoor(touchedDoor) {
 		   } else if ($(touchedDoor).attr('id') == "exitDoor") {
 			location = mainUrl;
 		   }
+
+
 	}
+
 }
 
 
@@ -165,6 +204,24 @@ function movePlayer(player, ground) {
 	}
 }
 
+function tryShowingEnterInstr() {
+	playerCanEnter = false;
+	$(".door").each( function() {
+		if (playerIntersectingDoor($(this))) {
+			playerCanEnter = true;
+		}
+	});
+
+	if (playerCanEnter && !enterInstructionsVisible && needEnterInstr) {
+		//make enter instructions pop up if they havent already 
+		addEnterInstructions();
+		enterInstructionsVisible = true;
+	} else if (!playerCanEnter && enterInstructionsVisible) {
+		removeEnterInstructions();
+		enterInstructionsVisible = false;
+	}
+}
+
 function updateFunc() {
 	var player = $("#player");
 	var ground = $("#ground");
@@ -183,6 +240,10 @@ function updateFunc() {
 
 	
 	movePlayer(player, ground);
+
+
+	tryShowingEnterInstr();
+
 
 }
 
