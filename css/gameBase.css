@@ -53,6 +53,17 @@ html {
 	position: absolute;
 
 }
+.textBox {
+	position: absolute;
+	background-color: #229944;
+	max-width: 30em;
+	border: 0.15em solid #ddd;
+    	border-radius: 0.15em;
+}
+.textBox p {
+	padding-left: 2%;
+	padding-right: 2%;
+}
 
 #header ul {
 	text-align: center;

@@ -18,6 +18,11 @@ var needEnterInstr = true;
 //var that tells whether the enter instructions are currently visible or not
 var enterInstructionsVisible = false;
 
+//var that holds current npc player is talking to, null if player not talking
+var activeNPC = null;
+//var that tells you which number text box should pop up next in your conversation with an NPC, starting text for NPC is always 0
+var currentTextNum = 0;
+
 //urls for all the different pages that can be entered through doors
 var barUrl = "barSite.html";
 var helpUrl = "helpSite.html";
@@ -58,7 +63,6 @@ function addEnterInstructions() {
 
 
 function removeArrowInstructions() {
-
 	$("#arrowKeyInstructions").animate({
 		top: "-=200",
 		opacity: "0"
@@ -70,7 +74,6 @@ function removeArrowInstructions() {
 
 
 function removeEnterInstructions() {
-
 	$("#enterInstructions").animate({
 		top: "-=200",
 		opacity: "0"
@@ -79,30 +82,116 @@ function removeEnterInstructions() {
 	});
 }
 
+
+function addTextAboveChar(characterId, textToAdd, textBoxId) {
+	var character = $(characterId);
+	var displayDiv ='<div id=' + textBoxId + ' class="textBox"><p>' + textToAdd + '</p></div>';
+	$("#gameHolder").append(displayDiv);
+	$("#"+textBoxId).css({
+		opacity: "0",
+		left: character.position().left,
+		top: character.position().top + character.width() 
+	});
+	$("#"+textBoxId).animate({
+		top: character.position().top - $("#"+textBoxId).height(),
+		opacity: "1",
+
+	}, 1000);
+}
+
+
+function removeTextAboveChar(textBoxId) {
+	$("#" + textBoxId).animate({
+		top: "-=200",
+		opacity: "0"
+	}, 1000, function() {
+		$(textBoxId).remove();
+	});
+
+}
+
+
 function attemptEnteringDoor(touchedDoor) {
-	var player = $("#player");
-
-	if (playerIntersectingDoor($(touchedDoor))) {
-	//TODO: cookies not owrking
-		  //save the position of the player when leave the page, so when he returns through the door he will be in front of the door and not at starting point
-		   document.cookie = "playerPosition=" + player.position().left;
-
-		   //Determines the type of door, uses to decide where to move player to
-		   if ($(touchedDoor).attr('id') == "barDoor") { 
-		   	location = barUrl;
-		   } else if ($(touchedDoor).attr('id') == "helpDoor") {
+	if (playerIntersectingObj($(touchedDoor))) {
+	 switch ($(touchedDoor).attr('id')) {
+		case 'barDoor':
+			setMainCookie();
+			location = barUrl;
+			break;
+		case 'helpDoor':
+			setMainCookie();
 			location = helpUrl;
-		   }  else if ($(touchedDoor).attr('id') == "mailDoor") {
+			break;
+		case 'mailDoor':
+			setMainCookie();
 			location = mailUrl;
-		   }  else if ($(touchedDoor).attr('id') == "artDoor") {
+			break;
+		case 'artDoor':
+			setMainCookie();
 			location = artUrl;
-		   } else if ($(touchedDoor).attr('id') == "exitDoor") {
+			break;
+		default:
 			location = mainUrl;
-		   }
+			break;
+		}
+	}
+}
 
+function getNPCText(givenNPC, textNum) {
+	
+	console.log($(givenNPC).attr('id'));
+	switch ($(givenNPC).attr('id')) {
+		case 'bartender':
+			switch (textNum) {
+				case 0: return 'First text';
+				case 1: return 'second text';
+				case 2: return 'third text';
+				default: return null;
+			}
+			break;
+		case 'welcomePerson':
+		      	switch (textNum) {
+				case 0: return 'welcome!';
+				case 1: return 'second welcome!';
+				default: return null;
+			}
+		      	break;
 
+		default: 
+		     	return null;
+		    	break;
 	}
 
+	return null;
+}
+
+function getNPCTextID(givenNPC, textNum) {
+	return $(givenNPC).attr('id') + textNum.toString() + "ID";
+}
+
+function attemptTalkingNPC(attemptedNPC) {
+	var player = $("#player");
+
+	if (playerIntersectingObj($(attemptedNPC))) {
+
+		if (activeNPC == null) {
+			//start talking to this npc
+			activeNPC = attemptedNPC;
+			addTextAboveChar(activeNPC, getNPCText(activeNPC,currentTextNum) , getNPCTextID(activeNPC,currentTextNum));
+			currentTextNum++;
+		} else {
+			removeTextAboveChar(getNPCTextID(activeNPC, currentTextNum - 1));
+			if (getNPCText(activeNPC, currentTextNum) != null) {
+				addTextAboveChar(activeNPC, getNPCText(activeNPC,currentTextNum), getNPCTextID(activeNPC,currentTextNum));
+				currentTextNum++;
+			} else {
+				currentTextNum = 0;
+				activeNPC = null;
+			}
+		}
+
+	
+	}
 }
 
 
@@ -147,6 +236,7 @@ $(document).ready(function() {
 			attemptEnteringDoor(this);
 		});
 	});
+
 
 });
 
@@ -207,7 +297,7 @@ function movePlayer(player, ground) {
 function tryShowingEnterInstr() {
 	playerCanEnter = false;
 	$(".door").each( function() {
-		if (playerIntersectingDoor($(this))) {
+		if (playerIntersectingObj($(this))) {
 			playerCanEnter = true;
 		}
 	});
@@ -250,9 +340,9 @@ function updateFunc() {
 
 
 //checks if at lest half of player is in door
-function playerIntersectingDoor(doorObj) {
+function playerIntersectingObj(givenObject) {
 	var player = $("#player");
-	return (doorObj.offset().left < player.offset().left + (player.width() / 2) && doorObj.offset().left + doorObj.width() > player.offset().left + (player.width() / 2));
+	return (givenObject.offset().left < player.offset().left + (player.width() / 2) && givenObject.offset().left + givenObject.width() > player.offset().left + (player.width() / 2));
 }
 
 
@@ -276,6 +366,10 @@ $(document).keydown(function(e) {
 	   $(".door").each(function(index) {
 		attemptEnteringDoor(this);	
 	   });
+
+	   $(".npc").each(function(index) {
+		   attemptTalkingNPC(this);
+	   });
 	  
         } else if (e.which == 32 || e.which == 38) {
 	    //if pressing space or up arrow and canJump jump and set canjump to false
@@ -294,6 +388,12 @@ $(document).keyup(function(e) {
 	}
 });
 
+//sets a cookie holding the player's position so when they exit a building
+//they come back where they left
+function setMainCookie() {
+  document.cookie = 'playerPosition' + $('#player').position();
+}
+
 //function taken from stackoverflow
 function getCookie(name) {
     var nameEQ = name + "=";
@@ -305,3 +405,17 @@ function getCookie(name) {
     }
     return null;
 } 
+
+//also taken from stackoverflow
+function setCookie(name, value, days)
+{
+  if (days)
+  {
+    var date = new Date();
+    date.setTime(date.getTime()+days*24*60*60*1000); // ) removed
+    var expires = "; expires=" + date.toGMTString(); // + added
+  }
+  else
+    var expires = "";
+  document.cookie = name+"=" + value+expires + ";path=/"; // + and " added
+}
