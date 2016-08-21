@@ -1,12 +1,32 @@
-
+html {
+	background-color: #8fe8f1;
+}
 #ground {
 	width: 300%;
-	background-color: #888888;
+	background-color: #5fc23d;
 }
 
 #player {
 	left: 48%;
 	top: 60%;
+}
+
+#arrowKeyInstructions {
+	position: absolute;
+	width: 8%;
+	height: 6%;
+	background-image: url(arrowGuide.png);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+}
+
+#enterInstructions {
+	position: absolute;
+	width: 8%;
+	height: 6%;
+	background-image: url(enterGuide.png);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
 }
 
 #AGDALogo {

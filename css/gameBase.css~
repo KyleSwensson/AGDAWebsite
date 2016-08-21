@@ -14,6 +14,10 @@ html {
 	background-size: 100% 100%;
 }
 #leftMoveButton {
+	background-image: url(leftButton.png);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	opacity: 0.6;
 	position: absolute;
 	left: 0%;
 	width: 10%;
@@ -23,6 +27,10 @@ html {
 }
 
 #rightMoveButton {
+	background-image: url(rightButton.png);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	opacity: 0.6;
 	position: absolute;
 	left: 90%;
 	width: 10%;
@@ -35,6 +43,7 @@ html {
 	left: 0;
 	top: 70%;
 	height: 30%;
+	
 }
 
 #player {
@@ -53,6 +62,17 @@ html {
 	position: absolute;
 
 }
+.textBox {
+	position: absolute;
+	background-color: #229944;
+	max-width: 30em;
+	border: 0.15em solid #ddd;
+    	border-radius: 0.15em;
+}
+.textBox p {
+	padding-left: 2%;
+	padding-right: 2%;
+}
 
 #header ul {
 	text-align: center;
@@ -65,6 +85,15 @@ html {
 	padding-right: 7%;
 }
 
+#blackOverlay {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 10;
+	background-color: black;
+	opacity: 1;
+	width: 100%;
+	height: 100%;
 
 a {
 	color: #ffffff;

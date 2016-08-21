@@ -1,7 +1,9 @@
-
+html {
+	background-color: #8fe8f1;
+}
 #ground {
 	width: 300%;
-	background-color: #888888;
+	background-color: #5fc23d;
 }
 
 #player {
