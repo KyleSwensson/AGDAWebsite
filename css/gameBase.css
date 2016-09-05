@@ -117,5 +117,5 @@ ul li {
 #locationsDropDown {
 	position: absolute;
 	background-color: #223344;
-
+	visibility: hidden;
 }

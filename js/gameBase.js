@@ -10,6 +10,8 @@ var leftButtonClicked = false;
 //var that is true if player is on ground and false if player is not on the ground essentially
 var canJump = false;
 
+//var that tells whether the locations drop down is currently visible
+var locationsDropDownVisible = false;
 
 //var that tells whether player needs arrow key instructions displayed
 var needArrInstr = true;
@@ -240,10 +242,47 @@ function setUpDropDown() {
 		top : dropDownBtn.position().top + dropDownBtn.height(),
 		width: dropDownBtn.width()
 	});
+}
 
 
+function pressLocationButton() {
+
+	var dropDownBtn = $("#locationsDropDownBtn");
+	var dropDown = $("#locationsDropDown");
+
+
+	if (locationsDropDownVisible) {
+		dropDown.css({
+			visibility: "hidden"
+		});
+		locationsDropDownVisible = false;
+	} else {
+		dropDown.css({
+			visibility: "visible"
+		});
+		locationsDropDownVisible = true;
+	}
 
 }
+
+function hoveredOnLocationsButton() {
+	if (!locationsDropDownVisible) {
+		locationsDropDownVisible = true;
+		$("#locationsDropDown").css({
+			visibility: "visible"
+		});
+	}
+}
+
+function hoveredOutLocationsButton() {
+	if (locationsDropDownVisible) {
+		locationsDropDownVisible = false;
+		$("#locationsDropDown").css({
+			visibility: "hidden"
+		});
+	}
+}
+
 
 
 $(document).ready(function() {
@@ -290,6 +329,17 @@ $(document).ready(function() {
 		});
 	});
 
+
+	$("#locationsDropDownBtn").on('touchstart', function() {
+		pressLocationButton();
+	});
+	$("#locationsDropDownBtn").on('mouseover', function() {
+		hoveredOnLocationsButton();
+	});
+	$("#locationsDropDownBtn").on('mouseout', function() {
+		hoveredOutLocationsButton();
+	});
+		
 
 	// set the dropdown menu to the right place
 	setUpDropDown();
