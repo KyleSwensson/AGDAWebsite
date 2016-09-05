@@ -84,7 +84,9 @@ html {
 	padding-left: 7%;
 	padding-right: 7%;
 }
-
+#locationsDropDown ul li {
+	display: block;
+}
 #blackOverlay {
 	position: absolute;
 	left: 0;
@@ -94,7 +96,26 @@ html {
 	opacity: 1;
 	width: 100%;
 	height: 100%;
+}
 
 a {
 	color: #ffffff;
+	font-family: 'Ubuntu', sans-serif;
+	text-decoration: none;
+	font-weight: bold;
+}
+a::visited {
+	color: #ffffff;
+}
+
+ul li {
+	font-family: 'Ubuntu', sans-serif;
+	font-weight: bold;
+
+}
+
+#locationsDropDown {
+	position: absolute;
+	background-color: #223344;
+
 }

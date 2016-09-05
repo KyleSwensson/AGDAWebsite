@@ -120,6 +120,9 @@ function removeTextAboveChar(textBoxId) {
 
 // fades the screen to black by upping the opacity of a black overlay div that covers the entire game, once it is done fading in send the user to the new url
 function fadeIntoBlack(gotoUrl) {
+	$("#blackOverlay").css({
+		visibility: "visible"
+	});
 	$("#blackOverlay").animate({
 		opacity: "1"
 	}, 700, function() {
@@ -216,9 +219,29 @@ function attemptTalkingNPC(attemptedNPC) {
 
 function fadeOutOfBlack() {
 
+	
 	$("#blackOverlay").animate({
 		opacity: "0"
-	}, 700);
+	}, 700, function() {
+		$("#blackOverlay").css({
+			visibility: "hidden"
+		});	
+		
+	});
+
+}
+
+
+function setUpDropDown() {
+	var dropDownBtn = $("#locationsDropDownBtn");
+	var dropDown = $("#locationsDropDown");
+	dropDown.css({
+		left : dropDownBtn.position().left,
+		top : dropDownBtn.position().top + dropDownBtn.height(),
+		width: dropDownBtn.width()
+	});
+
+
 
 }
 
@@ -266,6 +289,10 @@ $(document).ready(function() {
 			attemptEnteringDoor(this);
 		});
 	});
+
+
+	// set the dropdown menu to the right place
+	setUpDropDown();
 
 	fadeOutOfBlack();
 
