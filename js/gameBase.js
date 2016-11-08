@@ -19,6 +19,10 @@ var needArrInstr = true;
 var needEnterInstr = true;
 //var that tells whether the enter instructions are currently visible or not
 var enterInstructionsVisible = false;
+//var that tells whether player still needs tap instruction displayed when in front of door
+var needTouchInstr = true;
+// var that tells whether tap instructions are currently visible or not
+var touchInstructionsVisible = false;
 
 //var that holds current npc player is talking to, null if player not talking
 var activeNPC = null;
@@ -55,6 +59,8 @@ function addArrowInstructions() {
 }	
 
 function addEnterInstructions() {
+	$("#enterInstructions").stop();
+	$("#enterInstructions").remove();
 	var player = $("#player");
 	var instructions = '<div id="enterInstructions"></div>';
 	$("#gameHolder").append(instructions);
@@ -68,6 +74,21 @@ function addEnterInstructions() {
 		opacity: "1"
 	}, 1000);
 }	
+
+function addTouchInstructions() {
+	var player = $("#player");
+	var instructions = '<div id="touchInstructions"></div>';
+	$("#gameHolder").append(instructions);
+	$("#touchInstructions").css({
+		opacity: "0",
+		left: player.position().left - ($("#touchInstructions").width()/2) + (player.width() / 2),
+		top: player.position().top - ($("#touchInstructions").height() / 3)
+	});
+	$("#touchInstructions").animate({
+		opacity: "1"
+	}, 500);
+
+}
 
 
 
@@ -83,11 +104,20 @@ function removeArrowInstructions() {
 
 
 function removeEnterInstructions() {
+	$("#enterInstructions").stop();
 	$("#enterInstructions").animate({
 		top: "-=200",
 		opacity: "0"
 	}, 1000, function() {
 		$("#enterInstructions").remove();
+	});
+}
+
+function removeTouchInstructions() {
+	$("#touchInstructions").animate({
+		opacity: "0"
+	}, 500, function() {
+		$("#touchInstructions").remove();
 	});
 }
 
@@ -237,10 +267,10 @@ function fadeOutOfBlack() {
 function setUpDropDown() {
 	var dropDownBtn = $("#locationsDropDownBtn");
 	var dropDown = $("#locationsDropDown");
+
 	dropDown.css({
-		left : dropDownBtn.position().left,
-		top : dropDownBtn.position().top + dropDownBtn.height(),
-		width: dropDownBtn.width()
+	//	left : dropDownBtn.position().left,
+	//	top : dropDownBtn.position().top + dropDownBtn.height(),
 	});
 }
 
@@ -283,11 +313,44 @@ function hoveredOutLocationsButton() {
 	}
 }
 
+function setTaskbar() {
+	console.log("Running");
+	if ($(window).width() < 900) {
+		console.log("removing thing");
+		$("#mainGameHeaderLink").remove();
+		$("#barSiteHeaderLink").remove();
+		$("#helpSiteHeaderLink").remove();
+		$("#mailSiteHeaderLink").remove();
+		$("#artSiteHeaderLink").remove();
+	} else {
+		$("#locationsDropDownHolder").remove();
 
+	}
+
+
+}
+
+//makes page refresh when phone changes orientation in order to make the things scale correctly
+window.onorientationchange = function() { window.location.reload(); };
+//TODO: should possibly make a pop up encouraging the user to switch to landscape view
 
 $(document).ready(function() {
-		console.log(getCookie("playerPosition"));
+	if (getCookie("usingKeyboard") != null && getCookie("usingKeyboard") == "true") {
+		usingKeyboard = true;
+		arrowKeysPressed = true;
+		sideButtonsPressed = false;
+		$("#leftMoveButton").remove();
+		$("#rightMoveButton").remove();
+	} else if (getCookie("usingKeyboard") != null && getCookie("usingKeyboard") == "false") {
+		usingKeyboard = false;
+		sideButtonsPressed = true;
+		arrowKeysPressed = false;
+	}
+	console.log(getCookie("playerPosition"));
+
+	if (getCookie("playerPosition") == null) {
 		addArrowInstructions();
+	}
 
 		
 	//TODO: cookie stuff doesn't work rn fix it
@@ -296,8 +359,13 @@ $(document).ready(function() {
 	if (getCookie("playerPosition") != null) {
 		$("#player").css({
 			//left: getCookie("playerPosition")
-			left: 0
+			left: "40%"
 		});
+		if (window.location.href == "http://swensson.me/AGDASITE/mainGame.html" && getCookie("playerPosition") != null) {
+			$(".nonPlayer").css({
+				left: "-=" + getCookie("playerPosition")
+			});
+		}
 	}
 	//set update function to run every 50 ms
 	setInterval(updateFunc, 50);
@@ -333,10 +401,10 @@ $(document).ready(function() {
 	$("#locationsDropDownBtn").on('touchstart', function() {
 		pressLocationButton();
 	});
-	$("#locationsDropDownBtn").on('mouseover', function() {
+	$("#locationsDropDownHolder").on('mouseover', function() {
 		hoveredOnLocationsButton();
 	});
-	$("#locationsDropDownBtn").on('mouseout', function() {
+	$("#locationsDropDownHolder").on('mouseout', function() {
 		hoveredOutLocationsButton();
 	});
 		
@@ -345,6 +413,9 @@ $(document).ready(function() {
 	setUpDropDown();
 
 	fadeOutOfBlack();
+
+	//remove menu items if screen size less than 900
+	setTaskbar();
 
 
 });
@@ -389,7 +460,7 @@ function movePlayer(player, ground) {
 		if (leftArrPressed || rightArrPressed) {
 			// if user pressed an arrow key fade out the side buttons because they are touch controls
 			arrowKeysPressed = true;
-			usingKeyboard = true;
+			usingKeyboard = true; 
 			fadeOutSideButtons();
 		} else if (leftButtonClicked || rightButtonClicked) {
 			// if user pressed a side button remove the arrow key instructions over their head because those are for keyboard controls
@@ -416,6 +487,7 @@ function movePlayer(player, ground) {
 			$(".nonPlayer").css({
 				left: "+=20"
 			});
+			
 		}
 	} else if ((rightArrPressed && !leftArrPressed) || (rightButtonClicked && !leftButtonClicked)) {
 		// Symmetrical to above but for moving right instead of moving left
@@ -454,6 +526,16 @@ function tryShowingEnterInstr() {
 			removeEnterInstructions();
 			enterInstructionsVisible = false;
 		}
+	} else {
+		if (playerCanEnter && !touchInstructionsVisible && needTouchInstr) {
+			// make tap to enter instructions pop up if they havent already
+			addTouchInstructions();
+			touchInstructionsVisible = true;
+		} else if (!playerCanEnter && touchInstructionsVisible) {
+			removeTouchInstructions();
+			touchInstructionsVisible = false;
+		}
+
 	}
 }
 
@@ -549,6 +631,11 @@ $(document).keyup(function(e) {
 //they come back where they left
 function setMainCookie() {
   document.cookie = 'playerPosition=' + ($("#player").position().left - $("#AGDALogo").position().left);
+  if (usingKeyboard) {
+	document.cookie = 'usingKeyboard=true'
+  } else {
+	document.cookie = 'usingKeyboard=false'
+  }
 }
 
 //function taken from stackoverflow

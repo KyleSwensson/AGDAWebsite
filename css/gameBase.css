@@ -83,9 +83,30 @@ html {
 	color: #ffffff;	
 	padding-left: 7%;
 	padding-right: 7%;
+	position: relative;
+	top: -1em;
+}
+#locationsDropDownHolder {
+	display: inline-block;
 }
 #locationsDropDown ul li {
 	display: block;
+}
+#locationsDropDownBtn {
+	margin-top: 1em;
+	margin-bottom: 0.75em;
+}
+.dropDownItem {
+	padding-left: 3em;
+	padding-right: 3em;
+	padding-top: 1em;
+}
+#mainGameHeaderLink {
+	padding-top: 0.8em;
+}
+#headerUl {
+	padding-left: 1.3em;
+	padding-right: 1.3em;
 }
 #blackOverlay {
 	position: absolute;
@@ -106,6 +127,25 @@ a {
 }
 a::visited {
 	color: #ffffff;
+}
+
+
+#enterInstructions {
+	position: absolute;
+	width: 8%;
+	height: 6%;
+	background-image: url(enterGuide.png);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+}
+
+#touchInstructions {
+	position: absolute;
+	width: 6%;
+	height: 10%;
+	background-image: url(tapInstruction.png);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
 }
 
 ul li {
